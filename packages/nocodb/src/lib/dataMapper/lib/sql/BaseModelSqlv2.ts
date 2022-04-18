@@ -1796,7 +1796,7 @@ class BaseModelSqlv2 {
       const validate = column.getValidators();
       const cn = column.column_name;
       if (!validate) continue;
-      const { func, msg } = validate;
+      const { func, msg, args = [] } = validate;
       for (let j = 0; j < func.length; ++j) {
         const fn = typeof func[j] === 'string' ? Validator[func[j]] : func[j];
         const arg =
@@ -1806,7 +1806,9 @@ class BaseModelSqlv2 {
           columns[cn] !== undefined &&
           columns[cn] !== '' &&
           cn in columns &&
-          !(fn.constructor.name === 'AsyncFunction' ? await fn(arg) : fn(arg))
+          !(fn.constructor.name === 'AsyncFunction'
+            ? await fn(arg, ...args)
+            : fn(arg, ...args))
         ) {
           NcError.badRequest(
             msg[j].replace(/\{VALUE}/g, columns[cn]).replace(/\{cn}/g, cn)

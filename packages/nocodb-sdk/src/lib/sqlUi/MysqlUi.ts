@@ -1,4 +1,4 @@
-import UITypes from "../UITypes";
+import UITypes from '../UITypes';
 
 const dbTypes = [
   'int',
@@ -39,15 +39,15 @@ const dbTypes = [
   'multipoint',
   'multilinestring',
   'multipolygon',
-  'json'
+  'json',
 ];
 
 export class MysqlUi {
   static getNewTableColumns(): readonly any[] {
     return [
       {
-       column_name: 'id',
-       title: 'Id',
+        column_name: 'id',
+        title: 'Id',
         dt: 'int',
         dtx: 'integer',
         ct: 'int(11)',
@@ -66,11 +66,11 @@ export class MysqlUi {
         altered: 1,
         uidt: 'ID',
         uip: '',
-        uicn: ''
+        uicn: '',
       },
       {
-       column_name: 'title',
-       title: 'Title',
+        column_name: 'title',
+        title: 'Title',
         dt: 'varchar',
         dtx: 'specificType',
         ct: 'varchar(45)',
@@ -89,11 +89,11 @@ export class MysqlUi {
         altered: 1,
         uidt: 'SingleLineText',
         uip: '',
-        uicn: ''
+        uicn: '',
       },
       {
-       column_name: 'created_at',
-       title: 'CreatedAt',
+        column_name: 'created_at',
+        title: 'CreatedAt',
         dt: 'timestamp',
         dtx: 'specificType',
         ct: 'varchar(45)',
@@ -112,11 +112,11 @@ export class MysqlUi {
         altered: 1,
         uidt: UITypes.DateTime,
         uip: '',
-        uicn: ''
+        uicn: '',
       },
       {
-       column_name: 'updated_at',
-       title: 'UpdatedAt',
+        column_name: 'updated_at',
+        title: 'UpdatedAt',
         dt: 'timestamp',
         dtx: 'specificType',
         ct: 'varchar(45)',
@@ -135,14 +135,14 @@ export class MysqlUi {
         altered: 1,
         uidt: UITypes.DateTime,
         uip: '',
-        uicn: ''
-      }
+        uicn: '',
+      },
     ];
   }
 
   static getNewColumn(suffix) {
     return {
-     column_name: 'title' + suffix,
+      column_name: 'title' + suffix,
       dt: 'int',
       dtx: 'specificType',
       ct: 'integer(11)',
@@ -162,7 +162,7 @@ export class MysqlUi {
       altered: 1,
       uidt: 'Number',
       uip: '',
-      uicn: ''
+      uicn: '',
     };
   }
 
@@ -660,13 +660,15 @@ export class MysqlUi {
   }
 
   static extractFunctionName(query) {
-    const reg = /^\s*CREATE\s+.*?(?:OR\s+REPLACE\s*)?\s*FUNCTION\s+(?:`?[\w\d_]+`?\.)?`?([\w_\d]+)`?/i;
+    const reg =
+      /^\s*CREATE\s+.*?(?:OR\s+REPLACE\s*)?\s*FUNCTION\s+(?:`?[\w\d_]+`?\.)?`?([\w_\d]+)`?/i;
     const match = query.match(reg);
     return match && match[1];
   }
 
   static extractProcedureName(query) {
-    const reg = /^\s*CREATE.*?\s+(?:OR\s+REPLACE\s*)?\s*PROCEDURE\s+(?:[\w\d_]+\.)?([\w_\d]+)/i;
+    const reg =
+      /^\s*CREATE.*?\s+(?:OR\s+REPLACE\s*)?\s*PROCEDURE\s+(?:[\w\d_]+\.)?([\w_\d]+)/i;
     const match = query.match(reg);
     return match && match[1];
   }
@@ -732,7 +734,7 @@ export class MysqlUi {
           const column = {
             dp: null,
             tn,
-           column_name: keys[i],
+            column_name: keys[i],
             cno: keys[i],
             np: 10,
             ns: 0,
@@ -751,7 +753,7 @@ export class MysqlUi {
             dtx: 'specificType',
             dtxp: null,
             dtxs: 0,
-            altered: 1
+            altered: 1,
           };
 
           switch (typeof json[keys[i]]) {
@@ -759,13 +761,13 @@ export class MysqlUi {
               if (Number.isInteger(json[keys[i]])) {
                 if (MysqlUi.isValidTimestamp(keys[i], json[keys[i]])) {
                   Object.assign(column, {
-                    dt: 'timestamp'
+                    dt: 'timestamp',
                   });
                 } else {
                   Object.assign(column, {
                     dt: 'int',
                     np: 10,
-                    ns: 0
+                    ns: 0,
                   });
                 }
               } else {
@@ -774,25 +776,25 @@ export class MysqlUi {
                   np: 10,
                   ns: 2,
                   dtxp: '11',
-                  dtxs: 2
+                  dtxs: 2,
                 });
               }
               break;
             case 'string':
               if (MysqlUi.isValidDate(json[keys[i]])) {
                 Object.assign(column, {
-                  dt: 'datetime'
+                  dt: 'datetime',
                 });
               } else if (json[keys[i]].length <= 255) {
                 Object.assign(column, {
                   dt: 'varchar',
                   np: 255,
                   ns: 0,
-                  dtxp: '255'
+                  dtxp: '255',
                 });
               } else {
                 Object.assign(column, {
-                  dt: 'text'
+                  dt: 'text',
                 });
               }
               break;
@@ -800,14 +802,14 @@ export class MysqlUi {
               Object.assign(column, {
                 dt: 'boolean',
                 np: 3,
-                ns: 0
+                ns: 0,
               });
               break;
             case 'object':
               Object.assign(column, {
                 dt: 'json',
                 np: 3,
-                ns: 0
+                ns: 0,
               });
               break;
             default:
@@ -991,24 +993,24 @@ export class MysqlUi {
         colProp.dt = 'varchar';
         colProp.validate = {
           func: ['isMobilePhone'],
-          args: [''],
-          msg: ['Validation failed : isMobilePhone ({cn})']
+          args: [],
+          msg: ['Validation failed : isMobilePhone ({cn})'],
         };
         break;
       case 'Email':
         colProp.dt = 'varchar';
         colProp.validate = {
           func: ['isEmail'],
-          args: [''],
-          msg: ['Validation failed : isEmail ({cn})']
+          args: [],
+          msg: ['Validation failed : isEmail ({cn})'],
         };
         break;
       case 'URL':
         colProp.dt = 'varchar';
         colProp.validate = {
           func: ['isURL'],
-          args: [''],
-          msg: ['Validation failed : isURL ({cn})']
+          args: [],
+          msg: ['Validation failed : isURL ({cn})'],
         };
         break;
       case 'Number':
@@ -1021,8 +1023,8 @@ export class MysqlUi {
         colProp.dt = 'decimal';
         colProp.validate = {
           func: ['isCurrency'],
-          args: [''],
-          msg: ['Validation failed : isCurrency']
+          args: [{ digits_after_decimal: [1, 2] }],
+          msg: ['Validation failed : isCurrency'],
         };
         break;
       case 'Percent':
@@ -1090,7 +1092,7 @@ export class MysqlUi {
           'text',
           'tinytext',
           'mediumtext',
-          'longtext'
+          'longtext',
         ];
 
       case 'Attachment':
@@ -1102,7 +1104,7 @@ export class MysqlUi {
           'text',
           'tinytext',
           'mediumtext',
-          'longtext'
+          'longtext',
         ];
 
       case 'JSON':
@@ -1117,7 +1119,7 @@ export class MysqlUi {
           'bit',
           'boolean',
           'serial',
-          'tinyint'
+          'tinyint',
         ];
 
       case 'MultiSelect':
@@ -1149,7 +1151,7 @@ export class MysqlUi {
           'float',
           'decimal',
           'double',
-          'serial'
+          'serial',
         ];
 
       case 'Decimal':
@@ -1165,7 +1167,7 @@ export class MysqlUi {
           'smallint',
           'mediumint',
           'bigint',
-          'bit'
+          'bit',
         ];
 
       case 'Percent':
@@ -1178,7 +1180,7 @@ export class MysqlUi {
           'smallint',
           'mediumint',
           'bigint',
-          'bit'
+          'bit',
         ];
 
       case 'Duration':
@@ -1191,7 +1193,7 @@ export class MysqlUi {
           'smallint',
           'mediumint',
           'bigint',
-          'bit'
+          'bit',
         ];
 
       case 'Rating':
@@ -1204,7 +1206,7 @@ export class MysqlUi {
           'smallint',
           'mediumint',
           'bigint',
-          'bit'
+          'bit',
         ];
 
       case 'Formula':
@@ -1215,7 +1217,7 @@ export class MysqlUi {
           'text',
           'tinytext',
           'mediumtext',
-          'longtext'
+          'longtext',
         ];
 
       case 'Rollup':
@@ -1249,7 +1251,7 @@ export class MysqlUi {
           'polygon',
           'multipoint',
           'multilinestring',
-          'multipolygon'
+          'multipolygon',
         ];
 
       case 'Button':

@@ -2,8 +2,8 @@ export class OracleUi {
   static getNewTableColumns(): any[] {
     return [
       {
-       column_name: 'id',
-       title: 'Id',
+        column_name: 'id',
+        title: 'Id',
         dt: 'integer',
         dtx: 'integer',
         ct: 'int(11)',
@@ -22,11 +22,11 @@ export class OracleUi {
         altered: 1,
         uidt: 'ID',
         uip: '',
-        uicn: ''
+        uicn: '',
       },
       {
-       column_name: 'title',
-       title: 'Title',
+        column_name: 'title',
+        title: 'Title',
         dt: 'varchar',
         dtx: 'specificType',
         ct: 'varchar(45)',
@@ -45,8 +45,8 @@ export class OracleUi {
         altered: 1,
         uidt: 'SingleLineText',
         uip: '',
-        uicn: ''
-      }
+        uicn: '',
+      },
       // {
       //  column_name: "created_at",
       //   dt: "timestamp",
@@ -88,7 +88,7 @@ export class OracleUi {
 
   static getNewColumn(suffix) {
     return {
-     column_name: 'title' + suffix,
+      column_name: 'title' + suffix,
       dt: 'integer',
       dtx: 'specificType',
       ct: 'integer(11)',
@@ -108,7 +108,7 @@ export class OracleUi {
       altered: 1,
       uidt: 'Number',
       uip: '',
-      uicn: ''
+      uicn: '',
     };
   }
 
@@ -436,13 +436,15 @@ export class OracleUi {
   }
 
   static extractFunctionName(query) {
-    const reg = /^\s*CREATE\s+(?:OR\s+REPLACE\s*)?\s*FUNCTION\s+(?:[\w\d_]+\.)?([\w_\d]+)/i;
+    const reg =
+      /^\s*CREATE\s+(?:OR\s+REPLACE\s*)?\s*FUNCTION\s+(?:[\w\d_]+\.)?([\w_\d]+)/i;
     const match = query.match(reg);
     return match && match[1];
   }
 
   static extractProcedureName(query) {
-    const reg = /^\s*CREATE\s+(?:OR\s+REPLACE\s*)?\s*PROCEDURE\s+(?:[\w\d_]+\.)?([\w_\d]+)/i;
+    const reg =
+      /^\s*CREATE\s+(?:OR\s+REPLACE\s*)?\s*PROCEDURE\s+(?:[\w\d_]+\.)?([\w_\d]+)/i;
     const match = query.match(reg);
     return match && match[1];
   }
@@ -503,7 +505,7 @@ export class OracleUi {
                 columns.push({
                   dp: null,
                   tn,
-                 column_name: keys[i],
+                  column_name: keys[i],
                   cno: keys[i],
                   dt: 'int',
                   np: 10,
@@ -523,13 +525,13 @@ export class OracleUi {
                   dtx: 'specificType',
                   dtxp: '11',
                   dtxs: 0,
-                  altered: 1
+                  altered: 1,
                 });
               } else {
                 columns.push({
                   dp: null,
                   tn,
-                 column_name: keys[i],
+                  column_name: keys[i],
                   cno: keys[i],
                   dt: 'float',
                   np: 10,
@@ -549,7 +551,7 @@ export class OracleUi {
                   dtx: 'specificType',
                   dtxp: '11',
                   dtxs: 2,
-                  altered: 1
+                  altered: 1,
                 });
               }
 
@@ -560,7 +562,7 @@ export class OracleUi {
                 columns.push({
                   dp: null,
                   tn,
-                 column_name: keys[i],
+                  column_name: keys[i],
                   cno: keys[i],
                   dt: 'varchar',
                   np: 45,
@@ -580,13 +582,13 @@ export class OracleUi {
                   dtx: 'specificType',
                   dtxp: '45',
                   dtxs: 0,
-                  altered: 1
+                  altered: 1,
                 });
               } else {
                 columns.push({
                   dp: null,
                   tn,
-                 column_name: keys[i],
+                  column_name: keys[i],
                   cno: keys[i],
                   dt: 'text',
                   np: null,
@@ -606,7 +608,7 @@ export class OracleUi {
                   dtx: 'specificType',
                   dtxp: null,
                   dtxs: 0,
-                  altered: 1
+                  altered: 1,
                 });
               }
 
@@ -616,7 +618,7 @@ export class OracleUi {
               columns.push({
                 dp: null,
                 tn,
-               column_name: keys[i],
+                column_name: keys[i],
                 cno: keys[i],
                 dt: 'boolean',
                 np: 3,
@@ -636,7 +638,7 @@ export class OracleUi {
                 dtx: 'specificType',
                 dtxp: '1',
                 dtxs: 0,
-                altered: 1
+                altered: 1,
               });
               break;
 
@@ -644,7 +646,7 @@ export class OracleUi {
               columns.push({
                 dp: null,
                 tn,
-               column_name: keys[i],
+                column_name: keys[i],
                 cno: keys[i],
                 dt: 'json',
                 np: 3,
@@ -664,7 +666,7 @@ export class OracleUi {
                 dtx: 'specificType',
                 dtxp: null,
                 dtxs: 0,
-                altered: 1
+                altered: 1,
               });
               break;
 
@@ -839,24 +841,24 @@ export class OracleUi {
         colProp.dt = 'varchar';
         colProp.validate = {
           func: ['isMobilePhone'],
-          args: [''],
-          msg: ['Validation failed : isMobilePhone']
+          args: [],
+          msg: ['Validation failed : isMobilePhone'],
         };
         break;
       case 'Email':
         colProp.dt = 'varchar';
         colProp.validate = {
           func: ['isEmail'],
-          args: [''],
-          msg: ['Validation failed : isEmail']
+          args: [],
+          msg: ['Validation failed : isEmail'],
         };
         break;
       case 'URL':
         colProp.dt = 'varchar';
         colProp.validate = {
           func: ['isURL'],
-          args: [''],
-          msg: ['Validation failed : isURL']
+          args: [],
+          msg: ['Validation failed : isURL'],
         };
         break;
       case 'Number':
@@ -869,8 +871,8 @@ export class OracleUi {
         colProp.dt = 'decimal';
         colProp.validate = {
           func: ['isCurrency'],
-          args: [''],
-          msg: ['Validation failed : isCurrency']
+          args: [{ digits_after_decimal: [1, 2] }],
+          msg: ['Validation failed : isCurrency'],
         };
         break;
       case 'Percent':

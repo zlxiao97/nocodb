@@ -1,4 +1,4 @@
-import UITypes from "../UITypes";
+import UITypes from '../UITypes';
 
 const dbTypes = [
   'int',
@@ -22,15 +22,15 @@ const dbTypes = [
   'datetime',
   'text',
   'varchar',
-  'timestamp'
+  'timestamp',
 ];
 
 export class SqliteUi {
   static getNewTableColumns() {
     return [
       {
-       column_name: 'id',
-       title: 'Id',
+        column_name: 'id',
+        title: 'Id',
         dt: 'integer',
         dtx: 'integer',
         ct: 'int(11)',
@@ -49,11 +49,11 @@ export class SqliteUi {
         altered: 1,
         uidt: 'ID',
         uip: '',
-        uicn: ''
+        uicn: '',
       },
       {
-       column_name: 'title',
-       title: 'Title',
+        column_name: 'title',
+        title: 'Title',
         dt: 'varchar',
         dtx: 'specificType',
         ct: 'varchar',
@@ -72,11 +72,11 @@ export class SqliteUi {
         altered: 1,
         uidt: 'SingleLineText',
         uip: '',
-        uicn: ''
+        uicn: '',
       },
       {
-       column_name: 'created_at',
-       title: 'CreatedAt',
+        column_name: 'created_at',
+        title: 'CreatedAt',
         dt: 'datetime',
         dtx: 'specificType',
         ct: 'varchar',
@@ -95,11 +95,11 @@ export class SqliteUi {
         altered: 1,
         uidt: UITypes.DateTime,
         uip: '',
-        uicn: ''
+        uicn: '',
       },
       {
-       column_name: 'updated_at',
-       title: 'UpdatedAt',
+        column_name: 'updated_at',
+        title: 'UpdatedAt',
         dt: 'datetime',
         dtx: 'specificType',
         ct: 'varchar',
@@ -118,14 +118,14 @@ export class SqliteUi {
         altered: 1,
         uidt: UITypes.DateTime,
         uip: '',
-        uicn: ''
-      }
+        uicn: '',
+      },
     ];
   }
 
   static getNewColumn(suffix) {
     return {
-     column_name: 'title' + suffix,
+      column_name: 'title' + suffix,
       dt: 'integer',
       dtx: 'specificType',
       ct: 'integer(11)',
@@ -145,7 +145,7 @@ export class SqliteUi {
       altered: 1,
       uidt: 'Number',
       uip: '',
-      uicn: ''
+      uicn: '',
     };
   }
 
@@ -499,13 +499,15 @@ export class SqliteUi {
   }
 
   static extractFunctionName(query) {
-    const reg = /^\s*CREATE\s+(?:OR\s+REPLACE\s*)?\s*FUNCTION\s+(?:[\w\d_]+\.)?([\w_\d]+)/i;
+    const reg =
+      /^\s*CREATE\s+(?:OR\s+REPLACE\s*)?\s*FUNCTION\s+(?:[\w\d_]+\.)?([\w_\d]+)/i;
     const match = query.match(reg);
     return match && match[1];
   }
 
   static extractProcedureName(query) {
-    const reg = /^\s*CREATE\s+(?:OR\s+REPLACE\s*)?\s*PROCEDURE\s+(?:[\w\d_]+\.)?([\w_\d]+)/i;
+    const reg =
+      /^\s*CREATE\s+(?:OR\s+REPLACE\s*)?\s*PROCEDURE\s+(?:[\w\d_]+\.)?([\w_\d]+)/i;
     const match = query.match(reg);
     return match && match[1];
   }
@@ -566,7 +568,7 @@ export class SqliteUi {
           const column = {
             dp: null,
             tn,
-           column_name: keys[i],
+            column_name: keys[i],
             cno: keys[i],
             np: null,
             ns: null,
@@ -585,7 +587,7 @@ export class SqliteUi {
             dtx: 'specificType',
             dtxp: null,
             dtxs: 0,
-            altered: 1
+            altered: 1,
           };
 
           switch (typeof json[keys[i]]) {
@@ -593,16 +595,16 @@ export class SqliteUi {
               if (Number.isInteger(json[keys[i]])) {
                 if (SqliteUi.isValidTimestamp(keys[i], json[keys[i]])) {
                   Object.assign(column, {
-                    dt: 'timestamp'
+                    dt: 'timestamp',
                   });
                 } else {
                   Object.assign(column, {
-                    dt: 'integer'
+                    dt: 'integer',
                   });
                 }
               } else {
                 Object.assign(column, {
-                  dt: 'real'
+                  dt: 'real',
                 });
               }
               break;
@@ -614,24 +616,24 @@ export class SqliteUi {
               // } else
               if (json[keys[i]].length <= 255) {
                 Object.assign(column, {
-                  dt: 'varchar'
+                  dt: 'varchar',
                 });
               } else {
                 Object.assign(column, {
-                  dt: 'text'
+                  dt: 'text',
                 });
               }
               break;
             case 'boolean':
               Object.assign(column, {
-                dt: 'integer'
+                dt: 'integer',
               });
               break;
             case 'object':
               Object.assign(column, {
                 dt: 'text',
                 np: null,
-                dtxp: null
+                dtxp: null,
               });
               break;
             default:
@@ -807,24 +809,24 @@ export class SqliteUi {
         colProp.dt = 'varchar';
         colProp.validate = {
           func: ['isMobilePhone'],
-          args: [''],
-          msg: ['Validation failed : isMobilePhone']
+          args: [],
+          msg: ['Validation failed : isMobilePhone'],
         };
         break;
       case 'Email':
         colProp.dt = 'varchar';
         colProp.validate = {
           func: ['isEmail'],
-          args: [''],
-          msg: ['Validation failed : isEmail']
+          args: [],
+          msg: ['Validation failed : isEmail'],
         };
         break;
       case 'URL':
         colProp.dt = 'varchar';
         colProp.validate = {
           func: ['isURL'],
-          args: [''],
-          msg: ['Validation failed : isURL']
+          args: [],
+          msg: ['Validation failed : isURL'],
         };
         break;
       case 'Number':
@@ -837,8 +839,8 @@ export class SqliteUi {
         colProp.dt = 'double precision';
         colProp.validate = {
           func: ['isCurrency'],
-          args: [''],
-          msg: ['Validation failed : isCurrency']
+          args: [{ digits_after_decimal: [1, 2] }],
+          msg: ['Validation failed : isCurrency'],
         };
         break;
       case 'Percent':
@@ -912,7 +914,7 @@ export class SqliteUi {
           'bigint',
           'int2',
           'int8',
-          'boolean'
+          'boolean',
         ];
 
       case 'MultiSelect':
@@ -930,7 +932,7 @@ export class SqliteUi {
           'mediumint',
           'bigint',
           'int2',
-          'int8'
+          'int8',
         ];
 
       case 'Time':
@@ -942,7 +944,7 @@ export class SqliteUi {
           'mediumint',
           'bigint',
           'int2',
-          'int8'
+          'int8',
         ];
 
       case 'PhoneNumber':
@@ -966,7 +968,7 @@ export class SqliteUi {
           'real',
           'double',
           'double precision',
-          'float'
+          'float',
         ];
 
       case 'Decimal':
@@ -986,7 +988,7 @@ export class SqliteUi {
           'bigint',
           'int2',
           'int8',
-          'numeric'
+          'numeric',
         ];
 
       case 'Percent':
@@ -1003,7 +1005,7 @@ export class SqliteUi {
           'bigint',
           'int2',
           'int8',
-          'numeric'
+          'numeric',
         ];
 
       case 'Duration':
@@ -1015,7 +1017,7 @@ export class SqliteUi {
           'mediumint',
           'bigint',
           'int2',
-          'int8'
+          'int8',
         ];
 
       case 'Rating':
@@ -1032,7 +1034,7 @@ export class SqliteUi {
           'bigint',
           'int2',
           'int8',
-          'numeric'
+          'numeric',
         ];
 
       case 'Formula':
@@ -1050,7 +1052,7 @@ export class SqliteUi {
           'mediumint',
           'bigint',
           'int2',
-          'int8'
+          'int8',
         ];
 
       case 'Lookup':
@@ -1073,7 +1075,7 @@ export class SqliteUi {
           'mediumint',
           'bigint',
           'int2',
-          'int8'
+          'int8',
         ];
 
       case 'Barcode':
