@@ -501,7 +501,10 @@ class BaseModelSqlv2 {
     }
   }
 
-  public async multipleMmList({ colId, parentIds }, args?: { limit; offset }) {
+  public async multipleMmList(
+    { colId, parentIds },
+    args?: { limit; offset; sort; where }
+  ) {
     const relColumn = (await this.model.getColumns()).find(c => c.id === colId);
     const relColOptions = (await relColumn.getColOptions()) as LinkToAnotherRecordColumn;
 
@@ -525,6 +528,14 @@ class BaseModelSqlv2 {
     const qb = this.dbDriver(rtn).join(vtn, `${vtn}.${vrcn}`, `${rtn}.${rcn}`);
 
     await childModel.selectObject({ qb });
+
+    // nested filter and sort
+    const aliasColObjMap = await childTable.getAliasColObjMap();
+    const sorts = extractSortsObject(args?.sort, aliasColObjMap);
+    const filterObj = extractFilterFromXwhere(args?.where, aliasColObjMap);
+    await conditionV2(filterObj, qb, this.dbDriver);
+    if (sorts) await sortV2(sorts, qb, this.dbDriver);
+
     const finalQb = this.dbDriver.unionAll(
       parentIds.map(id => {
         const query = qb
@@ -564,7 +575,10 @@ class BaseModelSqlv2 {
     return parentIds.map(id => gs[id] || []);
   }
 
-  public async mmList({ colId, parentId }, args?: { limit; offset }) {
+  public async mmList(
+    { colId, parentId },
+    args?: { limit; offset; where; sort }
+  ) {
     const relColumn = (await this.model.getColumns()).find(c => c.id === colId);
     const relColOptions = (await relColumn.getColOptions()) as LinkToAnotherRecordColumn;
 
@@ -596,6 +610,14 @@ class BaseModelSqlv2 {
       );
 
     await childModel.selectObject({ qb });
+
+    // nested filter and sort
+    const aliasColObjMap = await childTable.getAliasColObjMap();
+    const sorts = extractSortsObject(args?.sort, aliasColObjMap);
+    const filterObj = extractFilterFromXwhere(args?.where, aliasColObjMap);
+    await conditionV2(filterObj, qb, this.dbDriver);
+    if (sorts) await sortV2(sorts, qb, this.dbDriver);
+
     // todo: sanitize
     qb.limit(args?.limit || 20);
     qb.offset(args?.offset || 0);
@@ -611,7 +633,7 @@ class BaseModelSqlv2 {
     });
   }
 
-  public async multipleMmListCount({ colId, parentIds }) {
+  public async multipleMmListCount({ colId, parentIds, ...args }) {
     const relColumn = (await this.model.getColumns()).find(c => c.id === colId);
     const relColOptions = (await relColumn.getColOptions()) as LinkToAnotherRecordColumn;
 
@@ -631,6 +653,11 @@ class BaseModelSqlv2 {
       //   [`${tn}_${vcn}`]: `${vtn}.${vcn}`
       // })
       .count(`${vtn}.${vcn}`, { as: 'count' });
+
+    // nested filter and sort
+    const aliasColObjMap = await childTable.getAliasColObjMap();
+    const filterObj = extractFilterFromXwhere(args?.where, aliasColObjMap);
+    await conditionV2(filterObj, qb, this.dbDriver);
 
     // await childModel.selectObject({ qb });
     const children = await this.dbDriver.unionAll(
@@ -655,7 +682,7 @@ class BaseModelSqlv2 {
     return parentIds.map(id => gs?.[id]?.[0] || []);
   }
 
-  public async mmListCount({ colId, parentId }) {
+  public async mmListCount({ colId, parentId, ...args }) {
     const relColumn = (await this.model.getColumns()).find(c => c.id === colId);
     const relColOptions = (await relColumn.getColOptions()) as LinkToAnotherRecordColumn;
 
@@ -683,6 +710,10 @@ class BaseModelSqlv2 {
           .where(_wherePk(parentTable.primaryKeys, parentId))
       )
       .first();
+    // nested filter and sort
+    const aliasColObjMap = await childTable.getAliasColObjMap();
+    const filterObj = extractFilterFromXwhere(args?.where, aliasColObjMap);
+    await conditionV2(filterObj, qb, this.dbDriver);
 
     const { count } = await qb;
 
