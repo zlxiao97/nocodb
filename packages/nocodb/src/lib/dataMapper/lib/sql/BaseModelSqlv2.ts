@@ -2111,6 +2111,28 @@ function getCompositePk(primaryKeys: Column[], row) {
   return primaryKeys.map(c => row[c.title]).join('___');
 }
 
+interface NcListParams {
+  limit?: number;
+  offset?: number;
+  where?: string;
+  sort?: string | string[];
+}
+interface NcListAliasParams extends NcListParams {
+  l?: number;
+  o?: number;
+  w?: string;
+  s?: string | string[];
+}
+
+export function getListParams(params: NcListAliasParams): NcListParams {
+  return {
+    limit: params?.limit ?? params?.l,
+    offset: params?.offset ?? params?.o,
+    where: params?.where ?? params?.w,
+    sort: params?.sort ?? params?.s
+  };
+}
+
 export { BaseModelSqlv2 };
 /**
  * @copyright Copyright (c) 2021, Xgene Cloud Ltd
