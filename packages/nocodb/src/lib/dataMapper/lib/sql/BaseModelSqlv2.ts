@@ -286,11 +286,11 @@ class BaseModelSqlv2 {
     return ((await qb) as any).count;
   }
 
-  async multipleHmList({ colId, ids }, args?: { limit?; offset? }) {
+  async multipleHmList(
+    { colId, ids },
+    args?: { limit?; offset?; sort?; where? }
+  ) {
     try {
-      // todo: get only required fields
-      let fields = '*';
-
       // const { cn } = this.hasManyRelations.find(({ tn }) => tn === child) || {};
       const relColumn = (await this.model.getColumns()).find(
         c => c.id === colId
@@ -305,17 +305,21 @@ class BaseModelSqlv2 {
         dbDriver: this.dbDriver
       });
       await parentTable.getColumns();
-      // if (fields !== '*' && fields.split(',').indexOf(cn) === -1) {
-      //   fields += ',' + cn;
-      // }
-
-      fields = fields
-        .split(',')
-        .map(c => `${chilCol.column_name}.${c}`)
-        .join(',');
 
       const qb = this.dbDriver(childTable.table_name);
       await childModel.selectObject({ qb });
+
+      // nested filter and sort
+      const aliasColObjMap = await childTable.getAliasColObjMap();
+      const sorts = extractSortsObject(args?.sort, aliasColObjMap);
+      const filterObj = extractFilterFromXwhere(args?.where, aliasColObjMap);
+      await conditionV2(filterObj, qb, this.dbDriver);
+      if (sorts) await sortV2(sorts, qb, this.dbDriver);
+
+      // sort by primary key by default
+      if (this.model.primaryKey) {
+        qb.orderBy(this.model.primaryKey.column_name);
+      }
 
       const childQb = this.dbDriver.queryBuilder().from(
         this.dbDriver
@@ -401,19 +405,9 @@ class BaseModelSqlv2 {
     }
   }
 
-  async hmList({ colId, id }, args?: { limit?; offset? }) {
+  async hmList({ colId, id }, args?: { limit?; offset?; sort?; where? }) {
     try {
-      // const {
-      //   where,
-      //   limit,
-      //   offset,
-      //   conditionGraph,
-      //   sort
-      //   // ...restArgs
-      // } = this.dbModels[child]._getChildListArgs(args);
-      // let { fields } = restArgs;
       // todo: get only required fields
-      let fields = '*';
 
       // const { cn } = this.hasManyRelations.find(({ tn }) => tn === child) || {};
       const relColumn = (await this.model.getColumns()).find(
@@ -429,16 +423,14 @@ class BaseModelSqlv2 {
         dbDriver: this.dbDriver
       });
       await parentTable.getColumns();
-      // if (fields !== '*' && fields.split(',').indexOf(cn) === -1) {
-      //   fields += ',' + cn;
-      // }
-
-      fields = fields
-        .split(',')
-        .map(c => `${chilCol.column_name}.${c}`)
-        .join(',');
-
       const qb = this.dbDriver(childTable.table_name);
+
+      // nested filter and sort
+      const aliasColObjMap = await childTable.getAliasColObjMap();
+      const sorts = extractSortsObject(args?.sort, aliasColObjMap);
+      const filterObj = extractFilterFromXwhere(args?.where, aliasColObjMap);
+      await conditionV2(new Filter(filterObj), qb, this.dbDriver);
+      if (sorts) await sortV2(sorts, qb, this.dbDriver);
 
       qb.whereIn(
         chilCol.column_name,
@@ -472,7 +464,7 @@ class BaseModelSqlv2 {
     }
   }
 
-  async hmListCount({ colId, id }) {
+  async hmListCount({ colId, id, ...args }) {
     try {
       // const { cn } = this.hasManyRelations.find(({ tn }) => tn === child) || {};
       const relColumn = (await this.model.getColumns()).find(
@@ -484,8 +476,15 @@ class BaseModelSqlv2 {
       const parentTable = await parentCol.getModel();
       await parentTable.getColumns();
 
-      const query = this.dbDriver(childTable.table_name)
-        .count(`${chilCol?.column_name} as count`)
+      const qb = this.dbDriver(childTable.table_name).count(
+        `${chilCol?.column_name} as count`
+      );
+      // nested filter and sort
+      const aliasColObjMap = await childTable.getAliasColObjMap();
+      const filterObj = extractFilterFromXwhere(args?.where, aliasColObjMap);
+      await conditionV2(new Filter(filterObj), qb, this.dbDriver);
+
+      const query = qb
         .whereIn(
           chilCol.column_name,
           this.dbDriver(parentTable.table_name)
