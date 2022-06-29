@@ -10,11 +10,13 @@ import FormView from './FormView';
 import GridView from './GridView';
 import KanbanView from './KanbanView';
 import GalleryView from './GalleryView';
+import CustomView from './CustomView';
 import GridViewColumn from './GridViewColumn';
 import Sort from './Sort';
 import Filter from './Filter';
 import { isSystemColumn, ViewType, ViewTypes } from 'nocodb-sdk';
 import GalleryViewColumn from './GalleryViewColumn';
+import CustomViewColumn from './CustomViewColumn';
 import FormViewColumn from './FormViewColumn';
 import Column from './Column';
 import NocoCache from '../cache/NocoCache';
@@ -301,6 +303,15 @@ export default class View implements ViewType {
           ncMeta
         );
         break;
+      case ViewTypes.CUSTOM:
+        await CustomView.insert(
+          {
+            ...(view as CustomView),
+            fk_view_id: view_id
+          },
+          ncMeta
+        );
+        break;
     }
 
     let columns: any[] = await (
@@ -451,6 +462,17 @@ export default class View implements ViewType {
           );
         }
         break;
+      case ViewTypes.CUSTOM:
+        {
+          col = await CustomViewColumn.insert(
+            {
+              ...param,
+              fk_view_id: view.id
+            },
+            ncMeta
+          );
+        }
+        break;
     }
 
     return col;
@@ -482,6 +504,9 @@ export default class View implements ViewType {
         break;
       case ViewTypes.FORM:
         columns = await FormViewColumn.list(viewId, ncMeta);
+        break;
+      case ViewTypes.CUSTOM:
+        columns = await CustomViewColumn.list(viewId, ncMeta);
         break;
     }
 

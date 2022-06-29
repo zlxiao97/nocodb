@@ -78,7 +78,8 @@
       "gallery": "画廊",
       "form": "表单",
       "kanban": "看板",
-      "calendar": "日历"
+      "calendar": "日历",
+      "custom": "自定义视图"
     },
     "user": "用户",
     "users": "用户",
@@ -476,7 +477,8 @@
         "gallery": "添加画廊视图",
         "form": "添加表单视图",
         "kanban": "添加看板视图",
-        "calendar": "添加日历视图"
+        "calendar": "添加日历视图",
+        "custom": "添加自定义视图"
       },
       "tablesMetadataInSync": "表元数据同步",
       "addMultipleUsers": "您可以添加多个逗号（，）分隔的电子邮件",

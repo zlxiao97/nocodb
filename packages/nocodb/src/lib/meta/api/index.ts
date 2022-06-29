@@ -9,6 +9,7 @@ import gridViewApis from './gridViewApis';
 import viewApis from './viewApis';
 import galleryViewApis from './galleryViewApis';
 import formViewApis from './formViewApis';
+import customViewApis from './customViewApis';
 import formViewColumnApis from './formViewColumnApis';
 import attachmentApis from './attachmentApis';
 import exportApis from './exportApis';
@@ -76,6 +77,7 @@ export default function(router: Router, server) {
   router.use(tableApis);
   router.use(galleryViewApis);
   router.use(formViewApis);
+  router.use(customViewApis);
   router.use(viewApis);
   router.use(attachmentApis);
   router.use(auditApis);

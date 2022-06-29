@@ -719,6 +719,49 @@ const up = async knex => {
     table.timestamps(true, true);
   });
 
+  await knex.schema.createTable(MetaTable.CUSTOM_VIEW, table => {
+    table.string('fk_view_id', 20).primary();
+    table.foreign('fk_view_id').references(`${MetaTable.VIEWS}.id`);
+
+    table.string('base_id', 20);
+    // table.foreign('base_id').references(`${MetaTable.BASES}.id`);
+    table.string('project_id', 128);
+    // table.foreign('project_id').references(`${MetaTable.PROJECT}.id`);
+
+    table.string('uuid');
+
+    table.timestamps(true, true);
+  });
+  await knex.schema.createTable(MetaTable.CUSTOM_VIEW_COLUMNS, table => {
+    table
+      .string('id', 20)
+      .primary()
+      .notNullable();
+
+    table.string('fk_view_id', 20);
+    table
+      .foreign('fk_view_id')
+      .references(`${MetaTable.CUSTOM_VIEW}.fk_view_id`);
+    table.string('fk_column_id', 20);
+    table.foreign('fk_column_id').references(`${MetaTable.COLUMNS}.id`);
+
+    table.string('base_id', 20);
+    // table.foreign('base_id').references(`${MetaTable.BASES}.id`);
+    table.string('project_id', 128);
+    // table.foreign('project_id').references(`${MetaTable.PROJECT}.id`);
+
+    table.string('uuid');
+
+    // todo:  type
+    table.string('label');
+    table.string('help');
+
+    table.boolean('show');
+    table.float('order');
+
+    table.timestamps(true, true);
+  });
+
   await knex.schema.createTable(MetaTable.USERS, table => {
     table
       .string('id', 20)
@@ -894,6 +937,8 @@ const down = async knex => {
   await knex.schema.dropTable(MetaTable.GALLERY_VIEW);
   await knex.schema.dropTable(MetaTable.FORM_VIEW_COLUMNS);
   await knex.schema.dropTable(MetaTable.FORM_VIEW);
+  await knex.schema.dropTable(MetaTable.CUSTOM_VIEW);
+  await knex.schema.dropTable(MetaTable.CUSTOM_VIEW_COLUMNS);
   await knex.schema.dropTable(MetaTable.SHARED_VIEWS);
   await knex.schema.dropTable(MetaTable.SORT);
   await knex.schema.dropTable(MetaTable.FILTER_EXP);

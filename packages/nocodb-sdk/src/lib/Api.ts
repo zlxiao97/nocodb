@@ -399,6 +399,37 @@ export interface FormColumnType {
   description?: string;
 }
 
+export interface CustomType {
+  id?: string;
+  title?: string;
+  heading?: string;
+  subheading?: string;
+  sucess_msg?: string;
+  redirect_url?: string;
+  redirect_after_secs?: string;
+  email?: string;
+  banner_image_url?: string;
+  logo_url?: string;
+  submit_another_form?: boolean;
+  columns?: CustomColumnType[];
+  fk_model_id?: string;
+}
+
+export interface CustomColumnType {
+  fk_column_id?: string;
+  id?: string;
+  fk_view_id?: string;
+  uuid?: any;
+  label?: string;
+  help?: any;
+  required?: boolean;
+  show?: boolean;
+  order?: number;
+  created_at?: string;
+  updated_at?: string;
+  description?: string;
+}
+
 export interface PaginatedType {
   pageSize?: number;
   totalRows?: number;
@@ -1761,6 +1792,28 @@ export class Api<
       this.request<any, any>({
         path: `/api/v1/db/meta/form-columns/${formViewColumnId}`,
         method: 'PATCH',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags DB view
+     * @name CustomCreate
+     * @request POST:/api/v1/db/meta/tables/{tableId}/customs
+     * @response `200` `CustomType` OK
+     */
+    customCreate: (
+      tableId: string,
+      data: CustomType,
+      params: RequestParams = {}
+    ) =>
+      this.request<CustomType, any>({
+        path: `/api/v1/db/meta/tables/${tableId}/customs`,
+        method: 'POST',
         body: data,
         type: ContentType.Json,
         format: 'json',

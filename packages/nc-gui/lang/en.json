@@ -78,7 +78,8 @@
       "gallery": "Gallery",
       "form": "Form",
       "kanban": "Kanban",
-      "calendar": "Calendar"
+      "calendar": "Calendar",
+      "custom": "Custom"
     },
     "user": "User",
     "users": "Users",
@@ -476,7 +477,8 @@
         "gallery": "Add Gallery View",
         "form": "Add Form View",
         "kanban": "Add Kanban View",
-        "calendar": "Add Calendar View"
+        "calendar": "Add Calendar View",
+        "custom": "Add Custom View"
       },
       "tablesMetadataInSync": "Tables metadata is in Sync",
       "addMultipleUsers": "You can add multiple comma(,) separated emails",
